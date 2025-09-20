@@ -2,7 +2,7 @@ import { Author } from "../models/index.js";
 import AppError from "../utils/AppError.js";
 
 export const getAuthors = async (req, res) => {
-  const { limit, offset } = req.query;
+  const { limit, offset, order } = req.query;
   try {
     const authors = await Author.getAll(
       Number(limit) || 20,

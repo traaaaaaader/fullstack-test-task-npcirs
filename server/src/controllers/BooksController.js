@@ -2,7 +2,7 @@ import { Book } from "../models/index.js";
 import AppError from "../utils/AppError.js";
 
 export const getBooks = async (req, res) => {
-  const { limit, offset } = req.query;
+  const { limit, offset, order } = req.query;
   try {
     const books = await Book.getAll(Number(limit) || 20, Number(offset) || 0);
     res.json(books);

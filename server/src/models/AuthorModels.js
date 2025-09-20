@@ -1,10 +1,11 @@
 import db from "../config/db.js";
+import AppError from "../utils/AppError.js";
 
 export const Author = {
   async getAll(limit = 20, offset = 0) {
     try {
       return await db.any(
-        "SELECT * FROM authors ORDER BY id LIMIT $1 OFFSET $2",
+        "SELECT id, full_name, rating, TO_CHAR(birth_date, 'YYYY-MM-DD') AS birth_date FROM authors ORDER BY id LIMIT $1 OFFSET $2",
         [limit, offset]
       );
     } catch (error) {
@@ -17,9 +18,10 @@ export const Author = {
 
   async getById(id) {
     try {
-      const author = await db.oneOrNone("SELECT * FROM authors WHERE id=$1", [
-        id,
-      ]);
+      const author = await db.oneOrNone(
+        "SELECT id, full_name, rating, TO_CHAR(birth_date, 'YYYY-MM-DD') AS birth_date FROM authors WHERE id=$1",
+        [id]
+      );
       if (!author) throw new AppError(`Автор с id=${id} не найден`, 404);
       return author;
     } catch (error) {
@@ -30,7 +32,7 @@ export const Author = {
   async create({ full_name, rating, birth_date }) {
     try {
       return await db.one(
-        "INSERT INTO authors(full_name, rating, birth_date) VALUES($1,$2,$2) RETURNING *",
+        "INSERT INTO authors(full_name, rating, birth_date) VALUES($1,$2,$2) RETURNING id, full_name, rating, TO_CHAR(birth_date, 'YYYY-MM-DD') AS birth_date",
         [full_name, rating, birth_date]
       );
     } catch (error) {
@@ -47,7 +49,7 @@ export const Author = {
       if (!existingAuthor)
         throw new AppError(`Автор с id=${id} не найден`, 404);
       return await db.one(
-        "UPDATE authors SET full_name=$1, rating=$2, birth_date=$3 WHERE id=$4 RETURNING *",
+        "UPDATE authors SET full_name=$1, rating=$2, birth_date=$3 WHERE id=$4 RETURNING id, full_name, rating, TO_CHAR(birth_date, 'YYYY-MM-DD') AS birth_date",
         [full_name, rating, birth_date, id]
       );
     } catch (error) {

@@ -10,6 +10,7 @@
 
 ```env
 PORT=5000
+ORIGIN=http://localhost:5173
 
 DB_HOST=cinema_db
 DB_PORT=5432

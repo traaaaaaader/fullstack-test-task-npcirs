@@ -5,7 +5,7 @@ export const Book = {
   async getAll(limit = 20, offset = 0) {
     try {
       return await db.any(
-        "SELECT * FROM books ORDER BY id LIMIT $1 OFFSET $2",
+        "SELECT id, title, pages, price, TO_CHAR(published_date, 'YYYY-MM-DD') AS published_date, author_id FROM books ORDER BY id LIMIT $1 OFFSET $2",
         [limit, offset]
       );
     } catch (error) {
@@ -18,7 +18,10 @@ export const Book = {
 
   async getById(id) {
     try {
-      const book = await db.oneOrNone("SELECT * FROM books WHERE id=$1", [id]);
+      const book = await db.oneOrNone(
+        "SELECT id, title, pages, price, TO_CHAR(published_date, 'YYYY-MM-DD') AS published_date, author_id FROM books WHERE id=$1",
+        [id]
+      );
       if (!book) throw new AppError(`Книга с id=${id} не найдена`, 404);
       return book;
     } catch (error) {
@@ -33,7 +36,7 @@ export const Book = {
       ]);
       if (!author) throw new AppError(`Автор с id=${author_id} не найден`, 404);
       return await db.one(
-        "INSERT INTO books(title, pages, price, published_date, author_id) VALUES($1,$2,$3,$4,$5) RETURNING *",
+        "INSERT INTO books(title, pages, price, published_date, author_id) VALUES($1,$2,$3,$4,$5) RETURNING id, title, pages, price, TO_CHAR(published_date, 'YYYY-MM-DD') AS published_date, author_id",
         [title, pages, price, published_date, author_id]
       );
     } catch (error) {
@@ -59,7 +62,7 @@ export const Book = {
       }
 
       return await db.one(
-        "UPDATE books SET title=$1, pages=$2, price=$3, published_date=$4, author_id=$5 WHERE id=$6 RETURNING *",
+        "UPDATE books SET title=$1, pages=$2, price=$3, published_date=$4, author_id=$5 WHERE id=$6 RETURNING id, title, pages, price, TO_CHAR(published_date, 'YYYY-MM-DD') AS published_date, author_id",
         [title, pages, price, published_date, author_id, id]
       );
     } catch (error) {
