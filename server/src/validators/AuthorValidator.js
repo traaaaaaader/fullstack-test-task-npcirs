@@ -8,7 +8,17 @@ export const validateGetAuthors = [
   query("offset")
     .optional()
     .isInt({ min: 0 })
-    .withMessage("offset должен быть >= 0"),
+    .withMessage("offset должен быть >=0"),
+  query("orderBy")
+    .optional()
+    .isString()
+    .isIn(["id", "full_name", "rating", "birth_date"])
+    .withMessage("orderBy должен быть одним из столбцов"),
+  query("sortOrder")
+    .optional()
+    .isString()
+    .isIn(["ASC", "DESC"])
+    .withMessage("sortOrder должен быть 'ASС' или 'DESC'"),
 ];
 
 export const validateAuthorId = [

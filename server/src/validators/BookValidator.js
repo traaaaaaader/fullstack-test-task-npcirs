@@ -9,6 +9,16 @@ export const validateGetBooks = [
     .optional()
     .isInt({ min: 0 })
     .withMessage("offset должен быть >=0"),
+  query("orderBy")
+    .optional()
+    .isString()
+    .isIn(["id", "title", "pages", "price", "published_date", "author_id"])
+    .withMessage("orderBy должен быть одним из столбцов"),
+  query("sortOrder")
+    .optional()
+    .isString()
+    .isIn(["ASC", "DESC"])
+    .withMessage("sortOrder должен быть 'ASC' или 'DESC'"),
 ];
 
 export const validateBookId = [

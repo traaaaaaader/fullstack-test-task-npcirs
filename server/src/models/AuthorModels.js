@@ -2,10 +2,18 @@ import db from "../config/db.js";
 import AppError from "../utils/AppError.js";
 
 export const Author = {
-  async getAll(limit = 20, offset = 0) {
+  async getAll(limit = 20, offset = 0, orderBy = "id", sortOrder = "ASС") {
+    const validSortColumns = ["id", "full_name", "rating", "birth_date"];
+
+    if (!validSortColumns.includes(orderBy)) {
+      orderBy = "id";
+    }
+
+    sortOrder = sortOrder.toUpperCase() === "DESC" ? "DESC" : "ASC";
+
     try {
       return await db.any(
-        "SELECT id, full_name, rating, TO_CHAR(birth_date, 'YYYY-MM-DD') AS birth_date FROM authors ORDER BY id LIMIT $1 OFFSET $2",
+        `SELECT id, full_name, rating, TO_CHAR(birth_date, 'YYYY-MM-DD') AS birth_date FROM authors ORDER BY ${orderBy} ${sortOrder} LIMIT $1 OFFSET $2`,
         [limit, offset]
       );
     } catch (error) {
@@ -32,7 +40,7 @@ export const Author = {
   async create({ full_name, rating, birth_date }) {
     try {
       return await db.one(
-        "INSERT INTO authors(full_name, rating, birth_date) VALUES($1,$2,$2) RETURNING id, full_name, rating, TO_CHAR(birth_date, 'YYYY-MM-DD') AS birth_date",
+        "INSERT INTO authors(full_name, rating, birth_date) VALUES($1,$2,$3) RETURNING id, full_name, rating, TO_CHAR(birth_date, 'YYYY-MM-DD') AS birth_date",
         [full_name, rating, birth_date]
       );
     } catch (error) {

@@ -2,11 +2,13 @@ import { Author } from "../models/index.js";
 import AppError from "../utils/AppError.js";
 
 export const getAuthors = async (req, res) => {
-  const { limit, offset, order } = req.query;
+  const { limit, offset, orderBy, sortOrder } = req.query;
   try {
     const authors = await Author.getAll(
       Number(limit) || 20,
-      Number(offset) || 0
+      Number(offset) || 0,
+      String(orderBy) || "id",
+      String(sortOrder) || "ASС"
     );
     res.json(authors);
   } catch (err) {

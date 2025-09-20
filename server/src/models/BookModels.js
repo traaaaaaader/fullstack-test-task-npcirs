@@ -2,10 +2,25 @@ import db from "../config/db.js";
 import AppError from "../utils/AppError.js";
 
 export const Book = {
-  async getAll(limit = 20, offset = 0) {
+  async getAll(limit = 20, offset = 0, orderBy = "id", sortOrder = "ASС") {
+    const validSortColumns = [
+      "id",
+      "title",
+      "pages",
+      "price",
+      "published_date",
+      "author_id",
+    ];
+
+    if (!validSortColumns.includes(orderBy)) {
+      orderBy = "id";
+    }
+
+    sortOrder = sortOrder.toUpperCase() === "DESC" ? "DESC" : "ASC";
+
     try {
       return await db.any(
-        "SELECT id, title, pages, price, TO_CHAR(published_date, 'YYYY-MM-DD') AS published_date, author_id FROM books ORDER BY id LIMIT $1 OFFSET $2",
+        `SELECT id, title, pages, price, TO_CHAR(published_date, 'YYYY-MM-DD') AS published_date, author_id FROM books ORDER BY ${orderBy} ${sortOrder} LIMIT $1 OFFSET $2`,
         [limit, offset]
       );
     } catch (error) {
