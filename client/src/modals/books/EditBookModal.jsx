@@ -6,6 +6,35 @@ import { useNavigate } from "react-router-dom";
 import { CircleX } from "lucide-react";
 import axiosInstance from "../../config/axios";
 
+const formSchema = [
+  { label: "ID книги", name: "id", type: "number", placeholder: "1" },
+  {
+    label: "Заголовок",
+    name: "title",
+    type: "text",
+    placeholder: "Заголовок",
+  },
+  {
+    label: "Количество страниц",
+    name: "pages",
+    type: "number",
+    placeholder: "100",
+  },
+  {
+    label: "Стоимость",
+    name: "price",
+    type: "number",
+    placeholder: "100 Р",
+  },
+  { label: "Дата выпуска", name: "published_date", type: "date" },
+  {
+    label: "ID Автора",
+    name: "author_id",
+    type: "number",
+    placeholder: "1",
+  },
+];
+
 const bookSchema = z.object({
   id: z
     .number({
@@ -76,109 +105,48 @@ const EditBookModal = ({ isOpen, setOpen }) => {
   }
 
   return (
-    <div className="fixed left-0 top-0 z-50 h-screen w-screen flex items-center justify-center bg-black/50">
-      <div className="relative p-6 bg-gray-200 min-w-lg rounded-2xl shadow-2xl border-2 border-blue-600 transition-all duration-300 overflow-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
+      <div className="relative w-full max-w-lg p-6 bg-white rounded-2xl shadow-lg border border-gray-200 overflow-auto">
         <CircleX
           onClick={() => setOpen(false)}
-          className="cursor-pointer absolute right-2 top-2 bg-red-800 rounded-full text-white"
+          className="absolute right-4 top-4 w-6 h-6 text-gray-400 cursor-pointer hover:text-gray-600 transition"
         />
-        <h3 className="text-xl font-bold text-blue-600 mb-4 text-center">
+        <h3 className="text-xl font-bold text-blue-500 mb-4 text-center">
           Изменить книгу
         </h3>
+
         {error && (
-          <div className="mb-3 p-2 bg-red-100 border border-red-400 text-red-700 rounded">
+          <div className="mb-4 p-2 bg-red-100 border border-red-300 text-red-700 rounded">
             {error}
           </div>
         )}
-        <form
-          className="flex flex-col gap-2"
-          onSubmit={handleSubmit((d) => onSubmit(d))}
-        >
-          <div className="flex flex-col">
-            <label className="text-gray-700">ID Книги</label>
-            <input
-              {...register("id", { valueAsNumber: true })}
-              className="bg-gray-50 border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 py-1 px-2 rounded-lg "
-              type="text"
-              placeholder="Заголовок"
-            />
-            {errors.id?.message && (
-              <p className="text-xs text-red-500">{errors.id?.message}</p>
-            )}
-          </div>
-          <div className="flex flex-col">
-            <label className="text-gray-700">Заголовок</label>
-            <input
-              {...register("title")}
-              className="bg-gray-50 border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 py-1 px-2 rounded-lg "
-              type="text"
-              placeholder="Заголовок"
-            />
-            {errors.title?.message && (
-              <p className="text-xs text-red-500">{errors.title?.message}</p>
-            )}
-          </div>
-          <div className="flex flex-col">
-            <label className="text-gray-700">Количество страниц</label>
-            <input
-              {...register("pages", { valueAsNumber: true })}
-              className="bg-gray-50 border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 py-1 px-2 rounded-lg "
-              type="number"
-              placeholder="100"
-              min="0"
-              step="1"
-            />
-            {errors.pages?.message && (
-              <p className="text-xs text-red-500">{errors.pages?.message}</p>
-            )}
-          </div>
-          <div className="flex flex-col">
-            <label className="text-gray-700">Стоимость</label>
-            <input
-              {...register("price", { valueAsNumber: true })}
-              className="bg-gray-50 border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 py-1 px-2 rounded-lg "
-              type="number"
-              placeholder="100 Р"
-              min="0"
-            />
-            {errors.price?.message && (
-              <p className="text-xs text-red-500">{errors.price?.message}</p>
-            )}
-          </div>
-          <div className="flex flex-col">
-            <label className="text-gray-700">Дата выпуска</label>
-            <input
-              {...register("published_date")}
-              className="bg-gray-50 border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 py-1 px-2 rounded-lg "
-              type="date"
-              placeholder="Дата выпуска"
-            />
-            {errors.published_date?.message && (
-              <p className="text-xs text-red-500">
-                {errors.published_date?.message}
-              </p>
-            )}
-          </div>
-          <div className="flex flex-col">
-            <label className="text-gray-700">ID Автора</label>
-            <input
-              {...register("author_id", { valueAsNumber: true })}
-              className="bg-gray-50 border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 py-1 px-2 rounded-lg "
-              type="number"
-              placeholder="1"
-            />
-            {errors.author_id?.message && (
-              <p className="text-xs text-red-500">
-                {errors.author_id?.message}
-              </p>
-            )}
-          </div>
+
+        <form className="flex flex-col gap-3" onSubmit={handleSubmit(onSubmit)}>
+          {formSchema.map((field) => (
+            <div className="flex flex-col" key={field.name}>
+              <label className="text-gray-700">{field.label}</label>
+              <input
+                {...register(field.name, {
+                  valueAsNumber: field.type === "number",
+                })}
+                type={field.type}
+                placeholder={field.placeholder}
+                className="bg-gray-50 border border-gray-300 text-gray-700 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+              />
+              {errors[field.name]?.message && (
+                <p className="text-xs text-red-500">
+                  {errors[field.name]?.message}
+                </p>
+              )}
+            </div>
+          ))}
+
           <button
             disabled={loading}
-            className={`cursor-pointer mt-2 p-2 rounded-2xl text-white transition ${
+            className={`cursor-pointer mt-4 py-2 rounded-lg font-semibold text-white transition ${
               loading
                 ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-600/90 hover:bg-blue-600"
+                : "bg-blue-500 hover:bg-blue-600"
             }`}
           >
             {loading ? "Сохранение..." : "Сохранить"}

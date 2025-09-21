@@ -63,7 +63,7 @@ const Tables = () => {
         field: "price",
         cellDataType: "number",
         valueFormatter: (params) => {
-          if (params.value == null || isNaN(params.value)) return "—";
+          if (params.value == null || isNaN(params.value)) return "";
           return params.value.toLocaleString() + " ₽";
         },
       },
@@ -101,7 +101,10 @@ const Tables = () => {
             birth_date: new Date(author.birth_date),
           }));
 
-          gridParams.successCallback(normalized, res.data.totalCount);
+          const lastRow =
+            normalized.length < limit ? offset + normalized.length : -1;
+
+          gridParams.successCallback(normalized, lastRow);
         } catch (err) {
           console.error("Ошибка загрузки авторов", err);
           gridParams.failCallback();
@@ -136,7 +139,10 @@ const Tables = () => {
             published_date: new Date(book.published_date),
           }));
 
-          gridParams.successCallback(normalized, res.data.totalCount);
+          const lastRow =
+            normalized.length < limit ? offset + normalized.length : -1;
+
+          gridParams.successCallback(normalized, lastRow);
         } catch (err) {
           console.error("Ошибка загрузки книг", err);
           gridParams.failCallback();
@@ -173,22 +179,22 @@ const Tables = () => {
           />
         </div>
         <div className="flex-1">
-          <div className="flex h-full flex-col">
-            <div className="flex justify-end p-2 gap-2">
+          <div className="flex flex-col h-full">
+            <div className="flex justify-end pb-4 gap-2">
               <button
-                className="cursor-pointer bg-green-700/90 hover:bg-green-700 py-1 px-2 rounded-lg text-white"
+                className="cursor-pointer bg-blue-500/90 hover:bg-blue-500 py-1 px-2 rounded-lg text-white"
                 onClick={() => setCreateIsOpen(true)}
               >
                 Добавить запись
               </button>
               <button
-                className="cursor-pointer bg-blue-600/90 hover:bg-blue-600 py-1 px-2 rounded-lg text-white"
+                className="cursor-pointer bg-blue-500/90 hover:bg-blue-500 py-1 px-2 rounded-lg text-white"
                 onClick={() => setEditIsOpen(true)}
               >
                 Изменить
               </button>
               <button
-                className="cursor-pointer bg-red-800/70 hover:bg-red-800 py-1 px-2 rounded-lg text-white"
+                className="cursor-pointer bg-red-500/80 hover:bg-red-600 py-1 px-2 rounded-lg text-white"
                 onClick={() => setDeleteIsOpen(true)}
               >
                 Удалить
