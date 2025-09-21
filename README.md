@@ -2,6 +2,12 @@
 
 ---
 
+Скачать репозиторий
+
+```
+git clone https://github.com/traaaaaaader/frontend-test-task-npcirs.git
+```
+
 ## Установка и запуск сервера
 
 ### Переменные окружения
@@ -21,19 +27,13 @@ DB_PASSWORD=admin
 
 ### Установка и запуск сервера
 
-1. Скачать репозиторий
-
-```
-git clone https://github.com/traaaaaaader/frontend-test-task-npcirs.git
-```
-
-2. Перейди в папку сервера:
+1. Перейди в папку сервера:
 
 ```
 cd fullstack-test-task-npcirs/server
 ```
 
-3. Запусти в Docker
+2. Запусти в Docker
 
 ```
 docker-compose up -d
@@ -42,3 +42,23 @@ docker-compose up -d
 ---
 
 ## Установка и запуск клиента
+
+1. Перейди в папку клиента:
+
+```
+cd fullstack-test-task-npcirs/client
+```
+
+2. Установи зависимости
+
+```
+npm install
+bun install
+```
+
+3. Запусти клиент
+
+```
+npm run dev
+bun dev
+```
