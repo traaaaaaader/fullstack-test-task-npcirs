@@ -1,17 +1,15 @@
-import Dashboard from "../pages/Dashboard";
-import Tables from "../pages/Tables";
-import NotFound from "../pages/NotFound";
+import { Dashboard, Tables, NotFound } from "../pages";
 
 export const routes = [
-  {
-    path: "/dashboard",
-    title: "Dashboard",
-    element: <Dashboard />,
-  },
   {
     path: "/tables",
     title: "Tables",
     element: <Tables />,
+  },
+  {
+    path: "/dashboard",
+    title: "Dashboard",
+    element: <Dashboard />,
   },
   {
     path: "*",

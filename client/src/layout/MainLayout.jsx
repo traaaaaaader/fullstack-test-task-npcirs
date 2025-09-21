@@ -3,7 +3,7 @@ import Sidebar from "../components/Sidebar";
 
 const MainLayout = ({ children }) => {
   return (
-    <div className="flex">
+    <div className="flex relative">
       <Sidebar />
       <div className="w-full h-screen overflow-hidden flex flex-col">
         <Header />
